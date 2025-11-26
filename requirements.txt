@@ -1,19 +1,16 @@
 streamlit==1.37.0
 requests
 
-# LangChain stack
 langchain==0.2.14
 langchain-core==0.2.39
 langchain-community==0.2.3
 
-# Embeddings
 sentence-transformers==2.2.2
 
-# FAISS (Python 3.13 compatible)
-faiss-cpu==1.13.0
+faiss-cpu==1.7.4
 
-# LlamaCpp (GGUF model loader)
 llama-cpp-python==0.2.20
 
 accelerate==0.30.0
 numpy==1.26.4
+
