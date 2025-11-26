@@ -1,19 +1,25 @@
 streamlit==1.37.0
 requests
 
+# Langchain
 langchain==0.2.14
 langchain-core==0.2.39
 langchain-community==0.2.3
 
+# Embeddings + dependencies
 sentence-transformers==2.2.2
 transformers==4.39.3
-torch==2.1.2
+huggingface_hub==0.20.3
+
+# FAISS
 faiss-cpu
 
+# LLM
 llama-cpp-python==0.2.20
 
-accelerate==0.30.0
-numpy==1.26.4
+# To avoid torch mismatch error
+torch==2.1.2 --extra-index-url https://download.pytorch.org/whl/cpu
+
 
 
 
