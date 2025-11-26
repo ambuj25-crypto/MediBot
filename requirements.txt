@@ -9,16 +9,11 @@ langchain-community==0.2.3
 # Embeddings
 sentence-transformers==2.2.2
 
-# FAISS
-faiss-cpu==1.7.4
+# FAISS (Python 3.13 compatible)
+faiss-cpu==1.13.0
 
 # LlamaCpp (GGUF model loader)
 llama-cpp-python==0.2.20
 
-# Optional but safe
 accelerate==0.30.0
 numpy==1.26.4
-
-
-
-
