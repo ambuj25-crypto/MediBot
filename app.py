@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 import pickle
-from huggingface_hub import hf_hub_download
+import requests
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.llms import LlamaCpp
@@ -9,40 +9,51 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # fix torch conflicts
-
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 st.set_page_config(page_title="MediBot Encyclopedia", layout="centered")
 
+
 # ------------------------------
-# DOWNLOAD FILES FROM HF DATASET
+# GOOGLE DRIVE DOWNLOAD FUNCTION
+# ------------------------------
+def download_from_drive(file_id, output_name):
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+    response = requests.get(url, stream=True)
+
+    if response.status_code != 200:
+        st.error(f"❌ Failed to download {output_name}")
+        st.stop()
+
+    with open(output_name, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
+
+    return os.path.abspath(output_name)
+
+
+# ------------------------------
+# DOWNLOAD ALL FILES ONCE
 # ------------------------------
 @st.cache_resource
 def download_files():
-    repo_id = "ambuj2507/medibot_data"   # <-- CHANGE TO YOUR DATASET
+    st.write("📥 Downloading model & FAISS from Google Drive... (one-time)")
 
-    st.write("📥 Downloading model & FAISS... (one-time)")
+    model_id = "1vSuKx-zNOLQ79cWSSWRQsI0lWI-Tmmxs"
+    faiss_id = "1fqLca-rTgM-EFspTvkFNYcWptgVy7mfV"
+    pkl_id =  "10zijiFtZ507CWtj9JqnHmAbXg2FO70ve"
 
-    model_path = hf_hub_download(
-        repo_id=repo_id,
-        filename="Llama-3.2-1B-Instruct-Q4_K_S.gguf"
-    )
-
-    faiss_path = hf_hub_download(
-        repo_id=repo_id,
-        filename="index.faiss"
-    )
-
-    pkl_path = hf_hub_download(
-        repo_id=repo_id,
-        filename="index.pkl"
-    )
+    model_path = download_from_drive(model_id, "model.gguf")
+    faiss_path = download_from_drive(faiss_id, "index.faiss")
+    pkl_path = download_from_drive(pkl_id, "index.pkl")
 
     return model_path, faiss_path, pkl_path
 
 
 # ------------------------------
-# LOAD FULL MODEL + FAISS RAG
+# LOAD MODEL + VECTORSTORE
 # ------------------------------
 @st.cache_resource
 def load_model():
@@ -51,12 +62,12 @@ def load_model():
 
     st.write("⏳ Loading MediBot Engine…")
 
-    # 1. Load Embeddings
+    # 1. Load embeddings
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
-    # 2. Load FAISS vectorstore
+    # 2. Load FAISS index + pickle
     with open(pkl_path, "rb") as f:
         index = pickle.load(f)
 
@@ -65,7 +76,7 @@ def load_model():
         index=index
     )
 
-    # 3. Load GGUF Model
+    # 3. Load Llama GGUF model
     llm = LlamaCpp(
         model_path=model_path,
         n_ctx=4096,
@@ -79,7 +90,7 @@ def load_model():
         verbose=False,
     )
 
-    # 4. Prompt Template
+    # 4. Prompt setup
     template = """
 You are MediBot — an AI medical assistant.
 Use ONLY the provided medical context.
@@ -111,7 +122,7 @@ USER QUESTION:
         output_key="answer"
     )
 
-    # 6. Combined RAG Chain
+    # 6. RAG Chain
     chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=vectorstore.as_retriever(search_kwargs={"k": 5}),
@@ -140,19 +151,19 @@ with st.sidebar:
         }]
         st.rerun()
 
-# Session Memory
+
+# Chat history
 if "messages" not in st.session_state:
     st.session_state.messages = [{
         "role": "assistant",
         "content": "Hello! Ask me about any medical condition."
     }]
 
-# Show history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Chat input
+# Input
 if prompt := st.chat_input("Ask something about a medical condition…"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
@@ -166,6 +177,3 @@ if prompt := st.chat_input("Ask something about a medical condition…"):
             st.markdown(output)
 
     st.session_state.messages.append({"role": "assistant", "content": output})
-
-
-
