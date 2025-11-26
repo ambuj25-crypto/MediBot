@@ -41,9 +41,11 @@ def download_from_drive(file_id, output_name):
 def download_files():
     st.write("📥 Downloading model & FAISS from Google Drive... (one-time)")
 
-    model_id = "1vSuKx-zNOLQ79cWSSWRQsI0lWI-Tmmxs"
-    faiss_id = "1fqLca-rTgM-EFspTvkFNYcWptgVy7mfV"
-    pkl_id =  "10zijiFtZ507CWtj9JqnHmAbXg2FO70ve"
+    model_id =https://drive.google.com/uc?export=download&id=1vSuKx-zNOLQ79cWSSWRQsI0lWI-Tmmxs
+
+    faiss_id = https://drive.google.com/uc?export=download&id=1fqLca-rTgM-EFspTvkFNYcWptgVy7mfV
+
+    pkl_id =  https://drive.google.com/file/d/10zijiFtZ507CWtj9JqnHmAbXg2FO70ve
 
     model_path = download_from_drive(model_id, "model.gguf")
     faiss_path = download_from_drive(faiss_id, "index.faiss")
@@ -177,3 +179,4 @@ if prompt := st.chat_input("Ask something about a medical condition…"):
             st.markdown(output)
 
     st.session_state.messages.append({"role": "assistant", "content": output})
+
