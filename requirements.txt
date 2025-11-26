@@ -1,11 +1,12 @@
 streamlit
-langchain
-langchain_community
+huggingface_hub
+langchain==0.2.14
+langchain-core
+langchain-community==0.2.3
 sentence-transformers
 faiss-cpu
-huggingface_hub==0.25.2
-llama-cpp-python
-pypdf
-tqdm
+llama-cpp-python==0.2.20 --prefer-binary
+accelerate
+
 
 
