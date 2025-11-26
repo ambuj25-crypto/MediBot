@@ -19,7 +19,7 @@ st.set_page_config(page_title="MediBot Encyclopedia", layout="centered")
 # ------------------------------
 @st.cache_resource
 def download_files():
-    repo_id = "ambuj2507/medibot-data"   # <-- CHANGE TO YOUR DATASET
+    repo_id = "ambuj2507/medibot_data"   # <-- CHANGE TO YOUR DATASET
 
     st.write("📥 Downloading model & FAISS... (one-time)")
 
@@ -166,5 +166,6 @@ if prompt := st.chat_input("Ask something about a medical condition…"):
             st.markdown(output)
 
     st.session_state.messages.append({"role": "assistant", "content": output})
+
 
 
