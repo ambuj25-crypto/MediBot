@@ -9,6 +9,9 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # fix torch conflicts
+
+
 st.set_page_config(page_title="MediBot Encyclopedia", layout="centered")
 
 # ------------------------------
@@ -163,4 +166,5 @@ if prompt := st.chat_input("Ask something about a medical condition…"):
             st.markdown(output)
 
     st.session_state.messages.append({"role": "assistant", "content": output})
+
 
