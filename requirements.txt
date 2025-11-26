@@ -1,8 +1,10 @@
 streamlit
 langchain
 langchain_community
-faiss-cpu
 sentence-transformers
+faiss-cpu
 huggingface-hub
 llama-cpp-python
 pypdf
+tqdm
+
