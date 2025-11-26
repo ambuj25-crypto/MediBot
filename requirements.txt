@@ -6,8 +6,10 @@ langchain-core==0.2.39
 langchain-community==0.2.3
 
 sentence-transformers==2.2.2
-
+transformers==4.39.3
+torch==2.1.2
 faiss-cpu
+
 llama-cpp-python==0.2.20
 
 accelerate==0.30.0
