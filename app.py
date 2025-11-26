@@ -80,9 +80,9 @@ def load_model():
     # 3. Load Llama GGUF model
     llm = LlamaCpp(
         model_path=model_path,
-        n_ctx=4096,
-        n_threads=4,
-        n_batch=128,
+        n_ctx=2048,
+        n_threads=2,
+        n_batch=32,
         temperature=0.1,
         top_p=0.9,
         max_tokens=700,
@@ -178,5 +178,6 @@ if prompt := st.chat_input("Ask something about a medical condition…"):
             st.markdown(output)
 
     st.session_state.messages.append({"role": "assistant", "content": output})
+
 
 
