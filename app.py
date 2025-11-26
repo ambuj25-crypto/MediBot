@@ -22,7 +22,7 @@ def download_files():
 
     model_path = hf_hub_download(
         repo_id=repo_id,
-        filename="Llama-3.2-1B-Instruct-Q5_K_M.gguf"
+        filename="Llama-3.2-1B-Instruct-Q4_K_S.gguf"
     )
 
     faiss_path = hf_hub_download(
@@ -163,3 +163,4 @@ if prompt := st.chat_input("Ask something about a medical condition…"):
             st.markdown(output)
 
     st.session_state.messages.append({"role": "assistant", "content": output})
+
